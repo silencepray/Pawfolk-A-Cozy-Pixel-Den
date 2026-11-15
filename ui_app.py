@@ -2116,6 +2116,30 @@ if _TAB == "log":
     st.checkbox("页面停留时每分钟自动结算一次", value=True, key="auto_tick",
                 help="关闭后属性只在你点击/刷新时结算")
     st.divider()
+    st.markdown("**存档导出 / 导入**")
+    st.caption("云端存档在重启、休眠后会回到初始状态，重要进度请导出保存。")
+    st.download_button(
+        "导出存档（.txt）", data=export_text(gs).encode("utf-8"),
+        file_name=f"player_pet_{datetime.now():%Y%m%d-%H%M}.txt",
+        mime="text/plain", width="stretch", key="export_save_log",
+    )
+    _up_log = st.file_uploader("导入存档（会覆盖当前进度）", type=["txt", "json"],
+                               key="save_upload_log")
+    if _up_log is not None:
+        _imp_log = st.checkbox("确认用这份文件覆盖当前进度", key="import_confirm_log")
+        if st.button("导入", disabled=not _imp_log, key="import_btn_log"):
+            try:
+                _raw_log = _up_log.getvalue().decode("utf-8", "ignore")
+            except Exception:
+                _raw_log = ""
+            _ok_log, _msg_log = import_save(_raw_log)
+            if _ok_log:
+                st.session_state.pop("game_state", None)
+                flash(_msg_log)
+                st.rerun()
+            else:
+                st.warning(_msg_log)
+    st.divider()
     st.checkbox("显示调参面板（自己找平衡用，定稿后关掉）", value=False, key="tune_on")
     if st.session_state.get("tune_on"):
         TUNE["play_cd_h"] = st.slider("玩耍冷却（小时）", 0.0, 12.0,
