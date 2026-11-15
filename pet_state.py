@@ -614,6 +614,34 @@ def use_item(gs, pet, item, species, is_star, out_msgs=None):
     elif special == "soap":
         inv.append(item)
         msg = "肥皂只能在洗澡时使用，已放回仓库"
+    elif special == "cooldown_reset":
+        _now_cd = datetime.now()
+        gs["last_play_time"] = _now_cd - timedelta(hours=6)
+        gs["last_bath_time"] = _now_cd - timedelta(hours=6)
+        gs["last_explore_time"] = (_now_cd - EXPLORE_BASE_COOLDOWN
+                                   - timedelta(minutes=1))
+        msg = "冷却清零：玩耍 / 洗澡 / 探索立刻就能再用"
+        add_log(f"{pet['name']} 用了时间秒表，冷却全部清零", gs["game_log"])
+    elif special in ("catnip", "chew"):
+        for k, v in fx.items():
+            pet[k] = pet.get(k, 0) + v
+        theory_ha = fx.get("ha", 0)
+        _bonus = 0
+        if special == "catnip" and species == "猫":
+            _bonus = 20
+            pet["hn"] = pet.get("hn", 0) + _bonus
+            msg = "开心 +50，猫闻到猫薄荷额外 +20"
+        elif special == "chew" and species == "狗":
+            _bonus = 15
+            pet["hn"] = pet.get("hn", 0) + _bonus
+            msg = "开心 +35，狗啃磨牙棒额外 +15"
+        else:
+            msg = "开心 +35" if special == "chew" else "开心 +50"
+    elif special == "wish_coin":
+        _gain = random.randint(30, 120)
+        gs["df"] = gs.get("df", 0) + _gain
+        msg = f"许愿瓶摇出 {_gain} 积分"
+        add_log(f"{pet['name']} 摇开星星许愿瓶，得到 {_gain} 积分", gs["game_log"])
     elif special == "star_potion":
         if pet["lv"] >= 10 and not pet.get("is_star"):
             pet["is_star"] = True
