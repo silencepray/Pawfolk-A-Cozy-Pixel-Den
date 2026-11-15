@@ -1,2 +1,7 @@
+# 毛孩子的小屋 · 运行依赖
+# 版本按 2026-11 本机实测通过的环境锁定，换机器时先按这个装，避免新版改掉
+# st.audio(autoplay=) / st.segmented_control 之类的行为。
 streamlit==1.67.0
 pillow==13.0.0
+# 测试可选：项目自带 runner，直接 python test_pet_logic.py 也能跑
+# pytest==8.3.4
