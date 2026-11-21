@@ -36,6 +36,13 @@ def test_smoke_new_game_and_actions():
     at.run()
     assert not at.exception, at.exception
 
+    # 照顾按钮收在「宠物管理」分区弹出层里，先进该分区再操作
+    seg0 = at.segmented_control[0]
+    seg0.set_value("宠物管理")
+    at.session_state["panel_open"] = "pet"
+    at.run()
+    assert not at.exception, at.exception
+
     # 喂食是 popover 里的控件，冒烟改用房间按钮：玩耍 + 主动技能
     play = [b for b in at.button if b.key == "act_play"]
     assert play, "找不到玩耍按钮"
@@ -60,12 +67,39 @@ def test_smoke_new_game_and_actions():
     assert not at.exception, at.exception
 
 
+def test_tasks_panel():
+    """任务·广播弹层包含引导/广播/今日本周月度/挑战，首页不留这些明细，且不混入商店货架。"""
+    at = _app()
+    species = [r for r in at.radio if "猫" in r.options]
+    if species:
+        species[0].set_value("猫")
+        at.run()
+    btns = [b for b in at.button if "开始新游戏" in b.label]
+    if btns:
+        btns[0].click()
+        at.run()
+    assert not at.exception, at.exception
+
+    # 首页不应平铺任务/广播明细
+    home_text = "\n".join(m.value for m in at.markdown)
+    assert "小屋广播" not in home_text and "本周任务" not in home_text
+
+    at.session_state["panel_open"] = "tasks"
+    at.run()
+    assert not at.exception, at.exception
+    text = "\n".join(m.value for m in at.markdown)
+    for kw in ["小屋广播", "今日任务", "本周任务", "月度目标", "限时挑战"]:
+        assert kw in text, f"任务弹层缺少 {kw}"
+    assert "萌宠商店" not in text
+
+
 def test_help_matches_constants():
     """帮助文案里的数字必须来自常量，不能手写。"""
     from pet_constants import SHINY_RATE, TOUCH_DAILY, SEASON_DAYS
     at = _app()
     seg = at.segmented_control[0]
     seg.set_value("帮助 · 规则")
+    at.session_state["panel_open"] = "help"
     at.run()
     assert not at.exception, at.exception
     text = "\n".join(m.value for m in at.markdown)

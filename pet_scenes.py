@@ -57,13 +57,27 @@ _PARTICLES = {
     "star": (("✧", "#B79BFF", "ps-p"), ("★", "#FFE066", "ps-twinkle"),
              ("✦", "#FFFFFF", "ps-bob")),
     "garden": (("✿", "#F6A6C0", "ps-p"), ("·", "#CDEBAF", "ps-bob")),
+    "plaza": (("✿", "#F6A6C0", "ps-p"), ("·", "#CDEBAF", "ps-bob"),
+              ("✧", "#FFF3D0", "ps-twinkle")),
+    "sec_shop": (("●", "#F6A6C0", "ps-p"), ("♥", "#FFD3E0", "ps-p")),
+    "sec_fun": (("◆", "#FFD34E", "ps-p"), ("✚", "#8FD3A8", "ps-p")),
+    "sec_decor": (("✿", "#F6A6C0", "ps-p"), ("◆", "#F0B24A", "ps-twinkle")),
+    "sec_dex": (("✧", "#C9A86B", "ps-twinkle"), ("·", "#8FB6C4", "ps-bob")),
+    "sec_pet": (("♥", "#E98A9A", "ps-p"), ("●", "#FFE066", "ps-bob")),
+    "sec_help": (("✧", "#9CC4E0", "ps-twinkle"), ("·", "#FFF3D0", "ps-p")),
+    "sec_ach": (("★", "#FFE066", "ps-twinkle"), ("◆", "#F0B24A", "ps-p")),
+    "sec_svc": (("·", "#8FB6C4", "ps-bob"), ("✧", "#C9CDD6", "ps-twinkle")),
+    "sec_log": (("·", "#9CC47A", "ps-bob"), ("✧", "#FFF3D0", "ps-p")),
 }
 
 # 场景主色，用于粒子层底光
 _GLOW = {
     "bath": "#8FD3E8", "feed": "#E8C08A", "play": "#F5C8A8",
     "explore": "#7FA86B", "clinic": "#A8D8C0", "craft": "#C59A5C",
-    "star": "#8A6AC0", "garden": "#9CC47A",
+    "star": "#8A6AC0", "garden": "#9CC47A", "plaza": "#BFE3F7",
+    "sec_shop": "#F0A2C4", "sec_fun": "#B7A8D8", "sec_decor": "#E8C8A0",
+    "sec_dex": "#C9A86B", "sec_pet": "#F2A6A6", "sec_help": "#B7CFD8",
+    "sec_ach": "#C9A24A", "sec_svc": "#9FBFCB", "sec_log": "#9CC47A",
 }
 
 
@@ -381,6 +395,276 @@ def _garden_svg(sp, mood, star, skin, strength, shiny=False):
     return _wrap(p, still=True)
 
 
+def _shell(p, wall, wall2, skirt, floor, floor2, stripes=4):
+    """分区场景通用墙地：0~19 墙、19~21 踢脚线、21~31 地板。"""
+    p.append(_qr(0, 0, 60, 19, wall))
+    for x in range(0, 60, stripes):
+        p.append(_qr(x, 0, 1, 19, wall2, .6))
+    p.append(_qr(0, 19, 60, 2, skirt))
+    p.append(_qr(0, 21, 60, 10, floor))
+    for y in range(22, 31, 2):
+        p.append(_qr(0, y, 60, 1, floor2, .7))
+
+
+def _sec_shop(sp, mood, star, skin, strength, shiny=False):
+    """萌宠商店：左右货架 + 彩球 + 衣架 + 柜台。"""
+    p = []
+    _shell(p, "#FDEEF2", "#F7D9E2", "#E8A1B8", "#F2D9B8", "#E5C49A")
+    p.append(_rz(30, 3.6, 15, 2.6, "#F7A8C4"))
+    p.append(_rz(30, 3.2, 13.6, 2.1, "#FFE4EE"))
+    for x in (24, 30, 36):
+        p.append(_qr(x, 2.6, 1, 1, "#FFC94A", .95))
+    # 左货架 + 彩球
+    p.append(_qr(2, 6, 12, 13, "#C79A63"))
+    p.append(_qr(2.6, 6.6, 10.8, 11.8, "#FFF3E4"))
+    for sy in (9.6, 13.6, 17.6):
+        p.append(_qr(2.6, sy, 10.8, 0.6, "#E8C8A0"))
+    balls = [("#F2705C", "#FF9C86"), ("#FFD34E", "#FFE9A8"), ("#7CC6F2", "#B7E4F4"),
+             ("#9CC47A", "#CDEBAF"), ("#C9A0E0", "#E2CFF2")]
+    for row, sy in enumerate((8.4, 12.4, 16.4)):
+        for i in range(5):
+            c, hi = balls[(row + i) % 5]
+            p.append(_rz(4.2 + i * 1.9, sy, 0.9, 0.9, c))
+            p.append(_rz(4.0 + i * 1.9, sy - 0.3, 0.4, 0.3, hi, .9))
+    # 右衣架
+    p.append(_qr(46, 6, 12, 13, "#C79A63"))
+    p.append(_qr(46.6, 6.6, 10.8, 11.8, "#FFF3E4"))
+    p.append(_qr(47, 8, 9.6, 0.6, "#E8C8A0"))
+    shirts = [("#F7B6C2", "#FFE4EE"), ("#7CC6F2", "#CFEBF7"), ("#FFD34E", "#FFF0B8"),
+              ("#9CC47A", "#CDEBAF"), ("#C9A0E0", "#E2CFF2")]
+    for row, sy in enumerate((9.4, 13.4, 17.4)):
+        for i in range(3):
+            c, hi = shirts[(row + i) % 5]
+            x = 48 + i * 3.2
+            p.append(_qr(x, sy, 2.4, 2.6, c))
+            p.append(_qr(x - 0.4, sy, 0.7, 1, c))
+            p.append(_qr(x + 2.1, sy, 0.7, 1, c))
+            p.append(_qr(x + 0.5, sy + 0.6, 1.4, 0.8, hi, .8))
+    # 柜台（低矮，不挡主角）
+    p.append(_qr(22, 27.4, 16, 2, "#E8A15C"))
+    p.append(_qr(22, 27, 16, 0.7, "#F6C98B"))
+    _pet(p, sp, mood, star, skin, dy=0.4, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _sec_fun(sp, mood, star, skin, strength, shiny=False):
+    """彩票 · 医院：左摇号柜台，右诊所十字。"""
+    p = []
+    _shell(p, "#F3F0FA", "#E4DEF2", "#B7A8D8", "#E8DCE8", "#D8C8D8")
+    p.append(_qr(3, 8, 13, 11, "#C99A5C"))
+    p.append(_qr(3.6, 8.6, 11.8, 9.8, "#FFF3E4"))
+    p.append(_rz(7, 6.4, 2.6, 2.6, "#7CC6F2"))
+    p.append(_rz(7, 6.0, 1.6, 1.2, "#B7E4F4"))
+    for i in range(3):
+        p.append(_qr(5 + i * 3, 11, 2.2, 3, "#FFE066"))
+    # 右诊所
+    p.append(_qr(45, 3, 11, 8, "#FFFFFF"))
+    p.append(_qr(48.2, 4, 1.6, 6, "#7FC79B"))
+    p.append(_qr(46, 6.2, 6, 1.6, "#7FC79B"))
+    p.append(_qr(47, 13, 9, 6, "#FFFFFF"))
+    p.append(_qr(48, 14, 3, 2, "#F2A6A6"))
+    p.append(_qr(52, 14, 3, 2, "#F6D08A"))
+    p.append(_qr(20, 27.4, 20, 2, "#B7CFD8"))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _sec_decor(sp, mood, star, skin, strength, shiny=False):
+    """小屋装修：色卡架 + 挂画 + 地毯卷 + 颜料罐。"""
+    p = []
+    _shell(p, "#F6F1E6", "#EBDFC8", "#C9A878", "#E3D0B0", "#D5BE96")
+    p.append(_qr(3, 4, 12, 12, "#B9824E"))
+    swatches = ["#F7B6C2", "#7CC6F2", "#FFD34E", "#9CC47A", "#C9A0E0", "#F2A6A6"]
+    for i, c in enumerate(swatches):
+        p.append(_qr(4 + (i % 3) * 3.6, 6 + (i // 3) * 4, 3, 3, c))
+    for x in (46, 51.5):
+        p.append(_qr(x, 4, 4.5, 6, "#8A6A44"))
+        p.append(_qr(x + 0.5, 4.5, 3.5, 5, "#BFE8FA"))
+    p.append(_rz(10, 27.6, 4, 1.4, "#F6A6C0"))
+    for i, c in enumerate(("#7CC6F2", "#FFD34E", "#9CC47A")):
+        p.append(_qr(46 + i * 3, 24, 2, 2.4, c))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _sec_dex(sp, mood, star, skin, strength, shiny=False):
+    """图鉴书房：双侧书架 + 中央相框。"""
+    p = []
+    _shell(p, "#EFE6D6", "#E2D4BC", "#A9744A", "#C49A6C", "#B4874F")
+    book_cols = ["#F2A6A6", "#7CC6F2", "#FFD34E", "#9CC47A", "#C9A0E0", "#F6E7A6"]
+    for bx in (2, 46):
+        p.append(_qr(bx, 3, 12, 16, "#8E6B44"))
+        for sy in (7, 11, 15):
+            p.append(_qr(bx, sy, 12, 0.6, "#6B4423"))
+        for row, sy in enumerate((4.6, 8.6, 12.6, 16.6)):
+            for i in range(6):
+                p.append(_qr(bx + 0.6 + i * 1.9, sy, 1.2, 2.6,
+                             book_cols[(row + i) % 6]))
+    p.append(_qr(24, 4, 12, 8, "#8A6A44"))
+    p.append(_qr(24.6, 4.6, 10.8, 6.8, "#FFFDF2"))
+    p.append(_rz(30, 8, 2.4, 2.2, "#F2C58A"))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _sec_pet(sp, mood, star, skin, strength, shiny=False):
+    """宠物管理：沙发 + 站架名牌。"""
+    p = []
+    _shell(p, "#FBEBD3", "#F2DCB6", "#C79A63", "#DDB180", "#C99A6A")
+    p.append(_qr(3, 17, 15, 6, "#F2A6A6"))
+    p.append(_qr(3, 15.6, 15, 2, "#F7B6C2"))
+    p.append(_qr(4, 23, 1.6, 4, "#C9727F"))
+    p.append(_qr(15.4, 23, 1.6, 4, "#C9727F"))
+    for x in (44, 50, 55.5):
+        p.append(_qr(x, 16, 4, 1, "#B9824E"))
+        p.append(_qr(x + 1.6, 17, 0.8, 6, "#A9744A"))
+        p.append(_qr(x - 0.4, 14.4, 4.8, 1.4, "#FFF3E4"))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _sec_help(sp, mood, star, skin, strength, shiny=False):
+    """帮助规则：告示板 + 大书讲台 + 台灯。"""
+    p = []
+    _shell(p, "#F3EFE4", "#E6DEC8", "#B98C55", "#D8C6A4", "#C8B48E")
+    p.append(_qr(44, 3, 13, 9, "#8A6A44"))
+    p.append(_qr(44.6, 3.6, 11.8, 7.8, "#FFF8E7"))
+    for y in (5, 7.2, 9.4):
+        p.append(_qr(46, y, 8, 0.8, "#C9B48A"))
+    p.append(_qr(8, 18, 12, 1.6, "#B9824E"))
+    p.append(_qr(12, 19.6, 1.6, 6, "#A9744A"))
+    p.append(_qr(6.6, 15.4, 14.8, 3.4, "#FFFFFF"))
+    p.append(_qr(7.2, 15.8, 13.6, 2.6, "#F2F6FA"))
+    p.append(_qr(13.6, 15.4, 0.5, 3.4, "#C9CDD6"))
+    p.append(_qr(4, 12, 0.8, 6, "#C99A5A"))
+    p.append(_rz(4.4, 11, 1.8, 1.2, "#FFD34E"))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _sec_ach(sp, mood, star, skin, strength, shiny=False):
+    """成就殿堂：深色金厅 + 奖杯架 + 勋章。"""
+    p = []
+    _shell(p, "#2A2138", "#352A48", "#4A3A5E", "#241B33", "#1B1528")
+    for x in (3, 44):
+        p.append(_qr(x, 6, 13, 1, "#6B5540"))
+        p.append(_qr(x, 12, 13, 1, "#6B5540"))
+    for x, y in ((6, 3.6), (11, 3.6), (47, 3.6), (52, 3.6)):
+        p.append(_qr(x, y, 2.4, 2.6, "#FFD34E"))
+        p.append(_qr(x + 0.6, y + 2.6, 1.2, 1, "#E8A15C"))
+    p.append(_rz(30, 6.4, 3.4, 3.4, "#FFD34E"))
+    p.append(_qr(29.2, 9.6, 1.6, 2.4, "#F2705C"))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _sec_svc(sp, mood, star, skin, strength, shiny=False):
+    """数据服务：图表板 + 办公桌 + 打印机。"""
+    p = []
+    _shell(p, "#EAF1F5", "#D8E6EC", "#9FBFCB", "#CFDDE2", "#BCCFD8")
+    p.append(_qr(4, 3, 13, 9, "#2C3A44"))
+    p.append(_qr(4.6, 3.6, 11.8, 7.8, "#14202A"))
+    for i, h in enumerate((1.4, 2.6, 1.8, 3.2, 2.2)):
+        p.append(_qr(5.6 + i * 2.2, 9.4 - h, 1.2, h, "#7CC6F2"))
+    p.append(_qr(38, 19, 18, 1.6, "#B9824E"))
+    p.append(_qr(39, 20.6, 1.6, 7, "#A9744A"))
+    p.append(_qr(52.4, 20.6, 1.6, 7, "#A9744A"))
+    p.append(_qr(42, 15.6, 6, 3.4, "#C9CDD6"))
+    p.append(_qr(43, 16.4, 4, 1, "#9AA3AE"))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _sec_log(sp, mood, star, skin, strength, shiny=False):
+    """日志设置：挂历 + 钟 + 书桌卷轴。"""
+    p = []
+    _shell(p, "#EFF6EA", "#DFEDD6", "#9CC47A", "#D6E2BE", "#C2D2A4")
+    p.append(_qr(45, 3, 7, 8, "#FFFFFF"))
+    p.append(_qr(45, 3, 7, 1.6, "#F2705C"))
+    for r in range(2):
+        for c in range(3):
+            p.append(_qr(46 + c * 2, 5.4 + r * 2, 1.2, 1.2, "#C9CDD6"))
+    p.append(_rz(56, 6.4, 2.6, 2.6, "#FFFFFF"))
+    p.append(_qr(55.6, 5.6, 0.4, 1.6, "#4A3218"))
+    p.append(_qr(4, 19, 16, 1.6, "#B9824E"))
+    p.append(_qr(5, 20.6, 1.6, 7, "#A9744A"))
+    p.append(_qr(17.4, 20.6, 1.6, 7, "#A9744A"))
+    p.append(_qr(8, 16.4, 5, 2.4, "#FFF3D8"))
+    p.append(_qr(8, 16.4, 0.6, 2.4, "#C99A5A"))
+    p.append(_qr(12.4, 16.4, 0.6, 2.4, "#C99A5A"))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
+def _plaza_svg(sp, mood, star, skin, strength, shiny=False):
+    """小镇广场：左侧宠物店 + 气球，右侧喷泉长椅，绿树蝴蝶，主角居中。"""
+    p = []
+    # 天空 + 云 + 太阳
+    p.append(_qr(0, 0, 60, 17, "#BFE3F7"))
+    p.append(_rz(10, 3.4, 4, 1.6, "#FFFFFF", .9))
+    p.append(_rz(13, 2.6, 3, 1.4, "#FFFFFF", .9))
+    p.append(_rz(40, 4, 4.6, 1.8, "#FFFFFF", .85))
+    p.append(_rz(44, 3, 3, 1.4, "#FFFFFF", .85))
+    p.append(_rz(54, 3.4, 2.6, 2.6, "#FFE9A8"))
+    # 地面石板路
+    p.append(_qr(0, 17, 60, 14, "#EBD3B0"))
+    for y in range(19, 31, 2):
+        p.append(_qr(0, y, 60, 0.4, "#D8B98C", .7))
+    for x in range(0, 60, 4):
+        p.append(_qr(x, 17, 0.4, 14, "#D8B98C", .5))
+    # 远景树
+    for x, c in ((0, "#8FC276"), (58, "#7FB875")):
+        p.append(_qr(x + 1, 9, 2, 8, "#9B6B3A"))
+        p.append(_rz(x + 2, 8, 4, 3.4, c))
+    # ---------- 左侧宠物店 ----------
+    p.append(_qr(2, 5, 16, 19, "#F7C6CE"))
+    p.append(_qr(2, 5, 16, 1.2, "#EFA8B8"))
+    # 招牌
+    p.append(_rz(10, 6.6, 6.4, 2.2, "#FFF3E0"))
+    p.append(_qr(7.4, 6.2, 5.2, 0.5, "#E8B48C"))
+    # 条纹雨棚
+    for i in range(8):
+        c = "#F2708A" if i % 2 == 0 else "#FFF3F5"
+        p.append(_qr(2 + i * 2, 9.6, 2, 1.8, c))
+    p.append(_qr(2, 11.4, 16, 0.6, "#D98A9A"))
+    # 门窗 + 货架
+    p.append(_qr(3.4, 13.4, 4, 5.4, "#BFE8FA"))
+    p.append(_qr(3.8, 14.2, 3.2, 0.5, "#FFF"))
+    p.append(_qr(3.8, 15.8, 3.2, 0.5, "#FFF"))
+    p.append(_qr(8.4, 13.4, 4.4, 10.6, "#B9824E"))
+    p.append(_qr(9, 14.2, 3.2, 9, "#8A5A2E"))
+    p.append(_qr(13.6, 13.4, 3.4, 5.4, "#BFE8FA"))
+    # 花盆
+    p.append(_qr(3, 23.4, 2.4, 1.6, "#C9824A"))
+    p.append(_qr(3.3, 22.6, 1.8, 1, "#7FB875"))
+    # 气球串
+    balloons = [("#F6A6C0", 15, 2.6), ("#FFB26B", 13.4, 3.6),
+                ("#FFE066", 16.6, 3.8), ("#7CC6F2", 15, 4.6)]
+    for c, bx, by in balloons:
+        p.append(_qr(bx, by + 1.6, 0.2, 3.4, "#8A6A44", .7))
+        p.append(_rz(bx, by, 1.3, 1.3, c))
+    # ---------- 右侧喷泉 ----------
+    p.append(_rz(47, 25.4, 9, 2.6, "#D8DEE6"))
+    p.append(_rz(47, 24.8, 7.6, 2, "#9FD8EE"))
+    p.append(_qr(50.4, 17, 3.2, 7.4, "#C4CCD6"))
+    p.append(_rz(52, 16.4, 4.4, 1.6, "#D8DEE6"))
+    p.append(_rz(52, 13.4, 2.6, 1.2, "#E6ECF2"))
+    for dx in (-2.4, 0, 2.4):
+        p.append(_qr(52 + dx, 14.6, 0.4, 5, "#BFE6F5", .8))
+    # 长椅
+    p.append(_qr(49, 21.6, 9, 1, "#B9824E"))
+    p.append(_qr(49, 20.2, 9, 0.8, "#C99A63"))
+    p.append(_qr(50, 22.6, 1, 3, "#8A6A44"))
+    p.append(_qr(56, 22.6, 1, 3, "#8A6A44"))
+    # 蝴蝶
+    for bx, by, bc in ((24, 8, "#F6A6C0"), (38, 9, "#C9A0E0"),
+                       (30, 12, "#FFE066"), (55, 12, "#F2A6A6")):
+        p.append(_qr(bx, by, 0.8, 0.5, bc))
+        p.append(_qr(bx + 0.8, by, 0.8, 0.5, bc))
+    _pet(p, sp, mood, star, skin, shiny=shiny)
+    return _wrap(p, still=True)
+
+
 _BUILDERS = {
     "bath": _bath_svg,
     "feed": _feed_svg,
@@ -390,6 +674,17 @@ _BUILDERS = {
     "craft": _craft_svg,
     "star": _star_svg,
     "garden": _garden_svg,
+    "plaza": _plaza_svg,
+    "sec_shop": _sec_shop,
+    "sec_fun": _sec_fun,
+    "sec_star": _star_svg,
+    "sec_decor": _sec_decor,
+    "sec_dex": _sec_dex,
+    "sec_pet": _sec_pet,
+    "sec_help": _sec_help,
+    "sec_ach": _sec_ach,
+    "sec_svc": _sec_svc,
+    "sec_log": _sec_log,
 }
 
 SCENE_LABELS = {
@@ -402,11 +697,23 @@ SCENE_LABELS = {
     "craft": "工坊",
     "star": "星辉祭坛",
     "garden": "花园",
+    "plaza": "小镇广场",
+    "sec_shop": "萌宠商店",
+    "sec_fun": "彩票 · 医院",
+    "sec_star": "星辉祭坛",
+    "sec_decor": "装修工坊",
+    "sec_dex": "图鉴书房",
+    "sec_pet": "宠物客厅",
+    "sec_help": "规则书房",
+    "sec_ach": "成就殿堂",
+    "sec_svc": "数据服务台",
+    "sec_log": "日志设置室",
 }
 
 
 def _wrap(body, still=False, glow=None):
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" '
+            'preserveAspectRatio="xMidYMid slice" '
             'width="1200" height="620" shape-rendering="crispEdges">'
             + "".join(body) + "</svg>")
 

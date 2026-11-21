@@ -351,6 +351,7 @@ def room_svg(species, mood="happy", star=False, skin="", extras=None, shiny=Fals
         p.append('<polygon points="300,100 420,100 560,360 400,360" fill="#FFF7D8" '
                  'opacity=".10"/>')
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" '
+            'preserveAspectRatio="xMidYMid slice" '
             'width="1200" height="620" shape-rendering="crispEdges">'
             + "".join(p) + "</svg>")
 
@@ -736,13 +737,13 @@ div[class*="st-key-sfxplayer_"] [data-testid="stAudio"] {height:1px;}
 /* ================= 商店商品卡片 ================= */
 .pe-item {
     display:flex; align-items:flex-start; gap:12px; padding:12px;
-    border:3px solid var(--ink); border-radius:0; background:var(--cream);
-    flex-wrap:wrap; min-width:0; box-shadow:5px 5px 0 var(--wood);
+    border:2.5px solid #E8B48C; border-radius:16px; background:var(--cream);
+    flex-wrap:wrap; min-width:0; box-shadow:4px 4px 0 #EFC9A6;
 }
-.pe-item-ico {width:56px; height:56px; flex:none; border-radius:0;
-    background:var(--gold); color:#5A3A10; border:3px solid var(--ink);
+.pe-item-ico {width:56px; height:56px; flex:none; border-radius:12px;
+    background:#FFE9BE; color:#5A3A10; border:2.5px solid #E8B48C;
     display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    box-shadow:3px 3px 0 var(--wood);}
+    box-shadow:2px 2px 0 #EFC9A6;}
 .pe-item > div:not(.pe-item-ico):not(.pe-item-price) {min-width:0; flex:1 1 auto;}
 .pe-item-name {font-weight:900; color:#2B1D10; font-size:.98rem; line-height:1.35;
     word-wrap:break-word; overflow-wrap:anywhere;}
@@ -750,6 +751,23 @@ div[class*="st-key-sfxplayer_"] [data-testid="stAudio"] {height:1px;}
     line-height:1.45; word-wrap:break-word; overflow-wrap:anywhere;}
 .pe-item-price {margin-left:auto; display:flex; align-items:center; gap:4px;
     font-weight:900; color:#B8690E; white-space:nowrap; flex:0 0 auto;}
+
+/* ================= 商店货架（暖粉小店） ================= */
+.shop-card {
+    text-align:center; padding:10px 6px; border:2.5px solid #E8B48C;
+    background:#FFF9F1; border-radius:14px; box-shadow:3px 3px 0 #EFC9A6;
+    margin-bottom:6px;
+}
+.shop-card.active {border-color:#E87AA8; background:#FFF0F6; box-shadow:3px 3px 0 #F2C4D8;}
+.shop-card-ico {
+    width:44px; height:44px; margin:0 auto 6px; background:#FFE9BE;
+    border:2px solid #E8B48C; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+}
+.shop-card-name {font-weight:900; color:#3B2A18; font-size:.82rem; line-height:1.25; min-height:2em;}
+.shop-card-price {margin-top:4px; font-weight:900; color:#B8690E; display:flex; justify-content:center; gap:4px; align-items:center;}
+.shop-detail {margin:10px 0 6px; padding:12px; border:2.5px solid #E8B48C;
+    border-radius:16px; background:#FFFDF8;}
 
 /* ================= 仓库网格 ================= */
 .pe-inv {display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px;}
@@ -800,6 +818,128 @@ div[class*="st-key-sfxplayer_"] [data-testid="stAudio"] {height:1px;}
     margin-bottom:12px; word-wrap:break-word; line-height:1.5;}
 [data-testid="stImage"] {display:flex; justify-content:center; max-width:100%;}
 
+/* ================= 热点导航 + 分区横幅 ================= */
+.hotspot-title {margin:10px 0 6px; font-weight:900; color:#4A3218; font-size:.92rem;}
+.sec-banner {display:flex; align-items:center; gap:12px; margin:8px 0 12px;
+  padding:12px 16px; border:3px solid #6B4423; border-radius:16px;
+  box-shadow:5px 5px 0 rgba(107,68,35,.25); color:#fff;}
+.sec-banner-ico {width:44px; height:44px; flex:none; display:flex; align-items:center;
+  justify-content:center; background:rgba(255,255,255,.22); border-radius:12px;
+  border:2px solid rgba(255,255,255,.5);}
+.sec-banner-title {font-weight:900; font-size:1.15rem; line-height:1.2;}
+.sec-banner-sub {font-size:.82rem; opacity:.92; margin-top:2px; font-weight:700;}
+.sec-shop {background:linear-gradient(135deg,#F0A2C4,#E87AA8);}
+.sec-fun {background:linear-gradient(135deg,#B7A8D8,#8A6AC0);}
+.sec-star {background:linear-gradient(135deg,#8A6AC0,#5A449A);}
+.sec-decor {background:linear-gradient(135deg,#E8B06A,#D98A3A);}
+.sec-dex {background:linear-gradient(135deg,#C9A86B,#A97F3F);}
+.sec-pet {background:linear-gradient(135deg,#F2A6A6,#E0707E);}
+.sec-help {background:linear-gradient(135deg,#9CC4E0,#6FA3C4);}
+.sec-ach {background:linear-gradient(135deg,#D9A93A,#B8861F);}
+.sec-svc {background:linear-gradient(135deg,#7FA8B8,#5A8296);}
+.sec-log {background:linear-gradient(135deg,#9CC47A,#6FA052);}
+
+/* 旧顶部分区标签条隐藏（状态仍由该 widget 绑定，导航收进底部圆形菜单） */
+.st-key-main_section { display:none !important; }
+
+/* ================= 底部圆形导航 ================= */
+.st-key-nav_out button, .st-key-nav_shop button, .st-key-nav_bag button,
+.st-key-nav_more button {
+    background:#FFF3D8; border:3px solid #B58A4E; border-radius:18px;
+    font-weight:900; color:#4A3218; box-shadow:3px 3px 0 #EFC9A6;
+    min-height:64px; padding:10px 6px;
+}
+.st-key-nav_shop button[kind="primary"], .st-key-nav_bag button[kind="primary"] {
+    background:#F6C98B; border-color:#8A5A14;
+}
+/* 底部导航固定悬浮在广场右下角 */
+.st-key-plaza_nav { position:fixed; right:18px; bottom:18px; z-index:30; width:330px; }
+.st-key-plaza_nav [data-testid="stHorizontalBlock"] { gap:10px; }
+.st-key-plaza_nav button { min-height:72px; border-radius:22px; }
+/* 给固定导航留出底部空间，避免遮住下方面板 */
+.stMainBlockContainer { padding-bottom:120px; }
+
+/* ===== 首页主场景全屏（弹层打开时 :not(:has(...)) 自动不生效） ===== */
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) {
+    max-width:100% !important; padding:0 !important;
+}
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .st-key-scene_wrap {
+    position:fixed; inset:0; z-index:0; margin:0 !important; padding:0 !important;
+}
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .st-key-scene {
+    margin:0 !important; padding:0 !important; height:100vh;
+}
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .pet-stage {
+    width:100vw !important; height:100vh !important;
+    border:0 !important; border-radius:0 !important; box-shadow:none !important;
+}
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .pet-stage svg {
+    width:100% !important; height:100% !important;
+}
+/* 背景音乐开关：顶部居中偏左，避开左右两张卡片 */
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .st-key-bgm_bar {
+    position:fixed; top:10px; left:280px; z-index:30; max-width:220px;
+}
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .st-key-bgm_bar [data-testid="stExpander"] {
+    background:rgba(255,246,224,.92); border:2px solid #B58A4E; border-radius:14px;
+    box-shadow:3px 3px 0 rgba(120,80,30,.2);
+}
+/* 天气说明：底部居中悬浮，避开左右两侧卡片与导航 */
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .st-key-weather_line {
+    position:fixed; left:50%; transform:translateX(-50%); bottom:96px; z-index:6; max-width:38%;
+}
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .st-key-weather_line [data-testid="stCaptionContainer"] {
+    background:rgba(255,246,224,.85); border-radius:10px; padding:4px 10px; white-space:nowrap;
+}
+/* 首页全屏时隐藏终端提示条（弹层内仍保留） */
+.stMainBlockContainer:has(.st-key-plaza_nav):not(:has(.st-key-panel_overlay)) .st-key-footer_note {
+    display:none;
+}
+
+/* 分区弹出覆盖层 */
+.st-key-panel_overlay { position:fixed; inset:0; z-index:40; overflow-y:auto;
+    background:rgba(43,29,16,.55); padding:20px; }
+.st-key-panel_overlay > div { background:var(--cream); border:4px solid var(--ink);
+    border-radius:20px; padding:16px; max-width:1100px; margin:0 auto; }
+.st-key-panel_overlay .st-key-panel_close button {
+    background:#F6C98B; border:3px solid #8A5A14; border-radius:14px; font-weight:900;
+}
+/* 覆盖层打开时收起「更多」残留菜单（PopoverBody 为 body 下的浮动门户） */
+.stMainBlockContainer:has(.st-key-panel_overlay) [data-testid="stPopoverBody"],
+body:has(.st-key-panel_overlay) [data-testid="stPopoverBody"] { display:none !important; }
+
+/* ================= 广场悬浮圆角卡片 ================= */
+.st-key-scene { position:relative; }
+/* markdown 渲染出的内层容器不要成为定位父级，保证卡片相对舞台四角定位 */
+.st-key-scene .stElementContainer { position:static !important; }
+.float-card {
+    position:absolute; z-index:5;
+    background:rgba(255,246,224,.95); border:3px solid #B58A4E; border-radius:20px;
+    box-shadow:4px 5px 0 rgba(120,80,30,.22); padding:10px 14px; color:#3B2A18;
+}
+.float-tl { top:14px; left:14px; max-width:52%; }
+.float-tl-inner { display:flex; gap:10px; align-items:center; }
+.float-avatar { width:54px; height:54px; flex:none; border-radius:50%; overflow:hidden;
+    background:#FFE9BE; border:3px solid #B58A4E; }
+.float-avatar svg { width:100%; height:100%; display:block; }
+.float-title { font-size:1.2rem; font-weight:900; letter-spacing:1px; color:#3B2A18;
+    text-shadow:2px 2px 0 #FFC94D; }
+.float-sub { font-size:.74rem; font-weight:700; color:#5A3E1E; margin-top:2px; }
+.float-money { display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; }
+.float-money .money-pill { padding:3px 10px; font-size:.85rem; box-shadow:3px 3px 0 var(--wood); }
+.float-tr { top:14px; right:14px; width:42%; }
+.float-card-title { font-size:.9rem; font-weight:900; color:#8A5A14; margin-bottom:6px; }
+.float-task { display:flex; align-items:center; gap:8px; font-weight:800; font-size:.82rem; padding:3px 0; }
+.float-task.done { opacity:.55; }
+.ft-name { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ft-rew { color:#B8690E; font-weight:900; }
+.float-bl { bottom:14px; left:14px; width:26%; }
+.float-stat { display:flex; align-items:center; gap:8px; padding:3px 0; font-weight:900; }
+.fs-ico { width:26px; height:26px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; border:2px solid; flex:none; }
+.fs-label { font-size:.85rem; }
+.fs-val { margin-left:auto; font-size:1rem; font-variant-numeric:tabular-nums; }
+
 /* ================= 响应式 ================= */
 @media (max-width:1024px){
     .pet-panel {padding:10px 11px 9px; box-shadow:6px 6px 0 var(--wood);}
@@ -819,6 +959,13 @@ div[class*="st-key-sfxplayer_"] [data-testid="stAudio"] {height:1px;}
     .game-hud {flex-direction:column; align-items:flex-start;}
     .hud-title {font-size:1.4rem;}
     .pe-msg, .pe-task-desc, .pe-ach-desc, .pe-item-desc, .pe-empty {font-size:.82rem;}
+}
+@media (max-width:500px){
+    .st-key-scene_wrap, .st-key-scene {position:static !important; height:auto !important;}
+    .float-card {position:static; margin:8px 0; max-width:100% !important; width:100% !important;}
+    .st-key-plaza_nav {position:static; width:100%; margin-top:10px;}
+    .st-key-bgm_bar, .st-key-weather_line {position:static !important; max-width:100% !important; transform:none !important;}
+    .st-key-footer_note {display:block !important;}
 }
 </style>
 """

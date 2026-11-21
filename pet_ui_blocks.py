@@ -45,7 +45,7 @@ def hud_block(gs, star_count, weather=None, fest=None):
     return (
         '<div class="game-hud">'
         '<div class="hud-brand">'
-        '<div class="hud-title">毛孩子的小屋</div>'
+        '<div class="hud-title">熊孩子的小屋</div>'
         f'<div class="hud-sub">{date.today().strftime("%Y年%m月%d日")}'
         f'<span class="season-chip season-{sd["key"]}">{sd["name"]} · 第 {sd["day_in_season"]}/{SEASON_DAYS} 天</span>'
         f'{w_chip}{f_chip} · 今天也要好好照顾它</div>'
